@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import json
+from pathlib import Path
 
 import boto3
 from web3 import Web3
@@ -36,8 +37,9 @@ def main():
         osmNext(w3)
 
 
-def withdraw3pool(w3):
-    with open('abi/yVault.json') as json_file:
+def withdraw3pool(w3): 
+    basePath = Path(__file__).parent
+    with basePath.joinpath('abi', 'yVault.json').open() as json_file:
         abi = json.load(json_file)
         yVault = w3.eth.contract(
             address=YEARN_3CRV,
@@ -45,7 +47,7 @@ def withdraw3pool(w3):
         )
         vaultBalance = w3.fromWei(yVault.functions.balance().call(), 'ether')
 
-    with open('abi/StrategyCurve3CrvVoterProxy.json') as json_file:
+    with basePath.joinpath('abi', 'StrategyCurve3CrvVoterProxy.json').open() as json_file:
         abi = json.load(json_file)
         yVaultStrat = w3.eth.contract(
             address=YEARN_3CRV_STRAT,
